@@ -49,7 +49,12 @@ class Program:
     program execution.
     """
 
-    def __init__(self):
+    def __init__(self, operations):
+        """
+        Initializes a Sputnik Program with a list of operations to perform.
+        This object should be retrieved via the Sputnik Parser.
+        """
+        self.operations = operations
         self.state = None
         self.variables = dict()
 
@@ -59,5 +64,5 @@ class Program:
         """
         var = self.variables.get(var_name, None)
         if not var:
-            raise SyntaxError("{} doesn't exist".format(var_name)
+            raise SyntaxError("{} doesn't exist".format(var_name))
         return var
