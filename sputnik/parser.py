@@ -10,6 +10,7 @@ class Parser:
     """
 
     def __init__(self, file_path: str):
+        # TODO: If there is any pre-processing stuff, do it here.
         # Open the file, parse the contents into a digestable format
         with open(file_path, 'r') as f:
             # Structure the raw data into lines
