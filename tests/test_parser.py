@@ -2,7 +2,7 @@ from sputnik.parser import Parser
 
 
 def test_parser_read_testfile():
-    SputnikParser = Parser('tests/test.sputnik')
+    SputnikParser = Parser('tests/parser.sputnik')
 
     assert SputnikParser.raw_data is not ''
     assert len(SputnikParser.lines) == 3
