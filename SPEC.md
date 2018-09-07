@@ -53,3 +53,12 @@ read as, "PUSH var into new_var". Continuing from our above example:
 PUSH plain STATE
 ```
 TODO
+
+### Comments
+
+Sputnik doesn't have inline comments, but you can write a comment via the semi-colon:
+```
+...
+; Copy the state
+PUSH STATE my_state
+```
