@@ -31,5 +31,25 @@ BOOTSTRAP plain pad
 In the above example, the variables `plain` and `pad` are encrypted inputs to
 the Sputnik program.
 
+To declare the end of the Sputnik program and return the encrypted state, simply
+call `EXIT`:
+```
+BOOTSTRAP plain pad
+...
+EXIT
+```
+
 ### Variables
+
+Fully Homomorphic programs must be executed linearly. Branching makes programs
+complex and hard to control and reason with. For a general rule, it appears that
+branching is easier if you do it very early on during execution so you can use
+multiplexing to get the program back into an easier-to-control linear state.
+
+We can declare an encrypted variable by pushing the state or an input. It can be
+read as, "PUSH var into new_var". Continuing from our above example:
+```
+...
+PUSH plain STATE
+```
 TODO
