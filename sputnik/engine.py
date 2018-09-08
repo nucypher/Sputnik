@@ -92,11 +92,7 @@ class Sputnik:
         """
         from_var, to_var = args
         from_var_data = self.program.get_variable_data(from_var)
-
-        if to_var == 'STATE':
-            self.program.state = from_var_data
-        else:
-            self.program.variables[to_var] = from_var_data
+        self.program.set_variable_data(to_var, from_var_data)
 
     def HALT(self, args, **kwargs):
         """
@@ -138,11 +134,25 @@ class Program:
     def get_variable_data(self, var_name):
         """
         Returns the data for the variable identified by `var_name`.
+        If the var is the global STATE, then it will return it instead.
         """
+        if var_name == 'STATE':
+            return self.state
+
         var = self.variables.get(var_name, None)
         if not var:
             raise SyntaxError("{} doesn't exist".format(var_name))
         return var
+
+    def set_variable_data(self, var_name, var_data):
+        """
+        Sets the data for the variable identified by `var_name`.
+        if the var is the global STATE, then it will set the STATE instead.
+        """
+        if var_name == 'STATE':
+            self.state = var_data
+        else:
+            self.variables[var_name] = var_data
 
     def find_entrance(self):
         """
@@ -193,3 +203,4 @@ class Program:
         state_info['state'] = self.state
         state_info['variables'] = self.variables.copy()
         state_info['exec_index'] = self.exec_index
+        return state_info

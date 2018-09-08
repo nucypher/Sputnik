@@ -1,3 +1,4 @@
 BOOTSTRAP test
 PUSH test STATE
+PUSH STATE new_var
 EXIT
