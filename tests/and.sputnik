@@ -1,3 +1,5 @@
-BOOTSTRAP a b
+EXEC a b
+SIZE 32
+KEY test_key
 AND a b
 EXIT

@@ -1,9 +1,14 @@
+#import nufhe
+import numpy
 from binascii import hexlify
 from merkletools import MerkleTools
+from reikna.cluda import any_api
 
 
 OP_CODES = [
     'BOOTSTRAP',
+    'SIZE',
+    'KEY',
     'PUSH',
     'NAND',
     'OR',
@@ -33,7 +38,6 @@ class Sputnik:
     TODO: Hash the variables and states throughout execution.
     """
 
-
     def __init__(self, program, bootstrapping_key):
         """
         Initializes the Sputnik Engine with a Program and a FHE bootstrapping
@@ -44,6 +48,9 @@ class Sputnik:
 
         # Merkle-tree for verification
         self.merkle = MerkleTools(hash_type='SHA256')
+
+        self.thr = any_api().Thread.create(interactive=True)
+        self.rng = numpy.random.RandomState()
 
     def execute_program(self, exec_index=None, **kwargs):
         """
@@ -82,12 +89,10 @@ class Sputnik:
             raise RuntimeError("{} with args {} and state {}".format(
                                op_code, args, state_info))
 
-    def BOOTSTRAP(self, args, **kwargs):
+    def EXEC(self, args, **kwargs):
         """
         Sputnik Program entrance OPCODE. Sets up the variables to be used during
         execution by checking the global kwargs for the entrance variables.
-
-        TODO: Handle bootstrapping key
         """
         entrance_vars = dict()
         for var_name in args:
@@ -96,6 +101,29 @@ class Sputnik:
                 continue
             entrance_vars[var_name] = var_data
         self.program.set_entrance_vars(**entrance_vars)
+
+    def SIZE(self, args, **kwargs):
+        """
+        Sets the STATE size in bits.
+        """
+        if hasattr(self.program, 'state_size'):
+            raise RuntimeError("Can't set SIZE more than once!")
+
+        state_size = int(args[0])
+        self.program.state_size = state_size
+
+    def KEY(self, args, **kwargs):
+        """
+        Sets the bootstrapping key to use for encrypted computations.
+        """
+        if hasattr(self.program, 'bootstrap_key'):
+            raise RuntimeError("Can't set KEY more than once!")
+
+        bootstrap_key = kwargs.get(args[0], None)
+        if not bootstrap_key:
+            raise SyntaxError("No key defined as {}".format(args[0]))
+
+        self.program.bootstrap_key = bootstrap_key
 
     def PUSH(self, args, **kwargs):
         """
