@@ -25,6 +25,9 @@ class Parser:
                 # Skip lines that begin with `;` -- they're comments
                 if line.startswith(';'):
                     continue
+                # Skip lines that are empty - Hacky af
+                if len(line) == 0:
+                    continue
                 self.operations.append(tuple(line.split(' ')))
 
     def get_program(self):

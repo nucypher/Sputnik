@@ -5,7 +5,7 @@ def test_parser_read_testfile():
     SputnikParser = Parser('tests/parser.sputnik')
 
     assert SputnikParser.raw_data is not ''
-    assert len(SputnikParser.lines) == 3
+    assert len(SputnikParser.lines) == 6
     assert len(SputnikParser.operations) == 3
 
     # Test Operations lengths
