@@ -65,7 +65,10 @@ class Sputnik:
 
         # Get the OPCODE function
         op_code_func = getattr(self, op_code)
-        return op_code_func(args, **kwargs)
+        try:
+            return op_code_func(args, **kwargs)
+        except Exception:
+            raise RuntimeError("{} with args {}".format(op_code, args))
 
     def BOOTSTRAP(self, args, **kwargs):
         """
@@ -241,6 +244,8 @@ class Program:
         """
         if var_name == 'STATE':
             return self.state
+        if var_name == 'NULL':
+            return None
 
         var = self.variables.get(var_name, None)
         if not var:
@@ -306,4 +311,6 @@ class Program:
         state_info['state'] = self.state
         state_info['variables'] = self.variables.copy()
         state_info['exec_index'] = self.exec_index
+        state_info['is_killed'] = self.is_killed
+        state_info['is_halted'] = self.is_halted
         return state_info
