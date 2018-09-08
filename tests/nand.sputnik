@@ -1,0 +1,5 @@
+EXEC a b
+SIZE 32
+KEY test_key
+NAND a b
+EXIT

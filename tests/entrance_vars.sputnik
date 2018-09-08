@@ -1,0 +1,4 @@
+EXEC
+KEY test_key
+SIZE 32
+EXIT
