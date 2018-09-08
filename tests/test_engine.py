@@ -27,3 +27,24 @@ def test_engine_halt():
 
     sputnik = Sputnik(proggy, None)
     output = sputnik.execute_program(a=1, b=2, c=3)
+
+
+def test_engine_OR():
+    SputnikParser = Parser('tests/or.sputnik')
+    proggy = SputnikParser.get_program()
+
+    sputnik = Sputnik(proggy, None)
+    var1 = 10
+    var2 = 21
+    sputnik.execute_program(a=var1, b=var2)
+    assert sputnik.program.state == ( var1 | var2 )
+
+def test_engine_AND():
+    SputnikParser = Parser('tests/and.sputnik')
+    proggy = SputnikParser.get_program()
+
+    sputnik = Sputnik(proggy, None)
+    var1 = 12
+    var2 = 13
+    sputnik.execute_program(a=var1, b=var2)
+    assert sputnik.program.state == ( var1 & var2 )
