@@ -5,6 +5,7 @@ name = "pypi"
 
 [packages]
 pytest = "*"
+"pysha3" = "*"
 
 [dev-packages]
 
