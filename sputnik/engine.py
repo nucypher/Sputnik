@@ -29,10 +29,20 @@ class Sputnik:
         if exec_index is None:
             self.program.set_exec_index(self.program.find_entrance() - 1)
 
-        # TODO: Other exit states other than `is_halted`
-        while not self.program.is_halted:
+        exec_condition = None
+        while not self.program.is_halted or not self.program.is_killed:
             op_code, args = self.program.increment_exec_index_and_get_op()
-            self.execute_operation(op_code, args, **kwargs)
+            exec_condition = self.execute_operation(op_code, args, **kwargs)
+            # TODO: Use exec_condition for logging/debugging/etc
+
+        # If the program gets halted, we return the exec_condition which
+        # contains the halt_information
+        if self.program.is_halted:
+            return exec_condition
+
+        # If the program is killed, we return the state to the user.
+        if self.program.is_killed:
+            return exec_condition
 
     def execute_operation(self, op_code, args, **kwargs):
         """
@@ -86,7 +96,7 @@ class Sputnik:
         state.
         """
         # TODO: Probably need an error for empty state...
-        self.program.is_halted = True
+        self.program.is_killed = True
         return self.program.state
 
 
@@ -106,6 +116,7 @@ class Program:
         self.variables = dict()
         self.exec_index = None
         self.is_halted = False
+        self.is_killed = False
 
     def get_variable_data(self, var_name):
         """
