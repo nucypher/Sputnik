@@ -54,9 +54,30 @@ PUSH plain STATE
 ```
 TODO
 
-### CONTROL
+### Control
 
-**HALT** -- Kills program execution and dumps the runtime state.
+**HALT** -- HALTs program execution and dumps the entire state machine.
+**EXIT** -- KILLs program execution and returns the STATE
+**RECOVER** -- RECOVERs from a HALT by reloading the entire state machine.
+
+### Logic Gates
+
+_All gates are bitwise operations._
+
+1. **NAND**
+2. **OR**
+3. **AND**
+4. **XOR**
+5. **XNOR**
+6. **NOT**
+7. **COPY** -- No bootstrapping required; wtf is this?
+8. **CONST** -- No bootstrapping required; wtf is this?
+9. **NOR**
+10. **ANDNY** -- NOT(A) AND B
+11. **ANDYN** -- A AND NOT(B)
+12. **ORNY** -- NOT(A) OR B
+13. **ORYN** -- A OR NOT(B)
+14. **MUX** -- A?B:C = A\*B + NOT(A)\*C
 
 ### Comments
 
