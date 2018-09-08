@@ -117,14 +117,30 @@ class Sputnik:
         Performs a logical OR on two bits.
         IN: A, B
         """
-        pass
+        var1, var2 = args
+
+        var1 = self.program.get_variable_data(var1)
+        var2 = self.program.get_variable_data(var2)
+
+        new_state = var1 | var2
+        self.program.set_variable_data('STATE', new_state)
+
+        self.merkleize_computation(var1, var2, new_state)
 
     def AND(self, args, **kwargs):
         """
         Performs a logical AND on two bits.
         IN: A, B
         """
-        pass
+        var1, var2 = args
+
+        var1 = self.program.get_variable_data(var1)
+        var2 = self.program.get_variable_data(var2)
+
+        new_state = var1 & var2
+        self.program.set_variable_data('STATE', new_state)
+
+        self.merkleize_computation(var1, var2, new_state)
 
     def XOR(self, args, **kwargs):
         """
@@ -138,6 +154,8 @@ class Sputnik:
 
         new_state = var1 ^ var2
         self.program.set_variable_data('STATE', new_state)
+
+        self._merkleize_computation(var1, var2, new_state)
 
     def XNOR(self, args, **kwargs):
         """
