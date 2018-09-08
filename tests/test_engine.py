@@ -37,7 +37,8 @@ def test_engine_OR():
     var1 = 10
     var2 = 21
     sputnik.execute_program(a=var1, b=var2)
-    assert sputnik.program.state == ( var1 | var2 )
+    assert sputnik.program.state == (var1 | var2)
+
 
 def test_engine_AND():
     SputnikParser = Parser('tests/and.sputnik')
@@ -47,4 +48,4 @@ def test_engine_AND():
     var1 = 12
     var2 = 13
     sputnik.execute_program(a=var1, b=var2)
-    assert sputnik.program.state == ( var1 & var2 )
+    assert sputnik.program.state == (var1 & var2)
