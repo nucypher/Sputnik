@@ -50,13 +50,9 @@ class Sputnik:
             exec_condition = self.execute_operation(op_code, args, **kwargs)
             # TODO: Use exec_condition for logging/debugging/etc
 
-        # If the program gets halted, we return the exec_condition which
-        # contains the halt_information
-        if self.program.is_halted:
-            return exec_condition
-
-        # If the program is killed, we return the state to the user.
-        if self.program.is_killed:
+        # If the program is halted, we return the entire finite state machine.
+        # If the program is killed, we return the STATE like normal.
+        if self.program.is_halted or self.program.is_killed:
             return exec_condition
 
     def execute_operation(self, op_code, args, **kwargs):

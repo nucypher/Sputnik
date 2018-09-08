@@ -6,6 +6,8 @@ name = "pypi"
 [packages]
 pytest = "*"
 "pysha3" = "*"
+click = "*"
+sputnik = {editable = true, path = "."}
 
 [dev-packages]
 
