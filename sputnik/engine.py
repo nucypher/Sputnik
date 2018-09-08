@@ -8,6 +8,20 @@ class Sputnik:
     OP_CODES = [
         'BOOTSTRAP',
         'PUSH',
+        'NAND',
+        'OR',
+        'AND',
+        'XOR',
+        'XNOR',
+        'NOT',
+        'COPY',
+        'CONST',
+        'NOR',
+        'ANDNY',
+        'ANDYN',
+        'ORNY',
+        'ORYN',
+        'MUX',
         'HALT',
         'EXIT',
     ]
@@ -30,7 +44,7 @@ class Sputnik:
             self.program.set_exec_index(self.program.find_entrance() - 1)
 
         exec_condition = None
-        while not self.program.is_halted or not self.program.is_killed:
+        while not self.program.is_halted and not self.program.is_killed:
             op_code, args = self.program.increment_exec_index_and_get_op()
             exec_condition = self.execute_operation(op_code, args, **kwargs)
             # TODO: Use exec_condition for logging/debugging/etc
@@ -54,12 +68,14 @@ class Sputnik:
 
         # Get the OPCODE function
         op_code_func = getattr(self, op_code)
-        op_code_func(args, **kwargs)
+        return op_code_func(args, **kwargs)
 
     def BOOTSTRAP(self, args, **kwargs):
         """
         Sputnik Program entrance OPCODE. Sets up the variables to be used during
         execution by checking the global kwargs for the entrance variables.
+
+        TODO: Handle bootstrapping key
         """
         entrance_vars = dict()
         for var_name in args:
