@@ -1,0 +1,20 @@
+BOOTSTRAP a b
+
+;OR computation
+OR a b
+PUSH STATE orResult
+
+;AND computation
+AND a b
+PUSH STATE andResult
+
+;XOR(OR,AND)
+XOR orResult andResult
+PUSH STATE xorResult
+
+;XOR(a, b)
+XOR a b
+
+; AND of equivalent values
+AND xorResult STATE
+EXIT

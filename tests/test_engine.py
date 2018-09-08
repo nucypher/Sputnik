@@ -49,3 +49,26 @@ def test_engine_AND():
     var2 = 13
     sputnik.execute_program(a=var1, b=var2)
     assert sputnik.program.state == (var1 & var2)
+
+
+def test_engine_XOR():
+    SputnikParser = Parser('tests/xor.sputnik')
+    proggy = SputnikParser.get_program()
+
+    sputnik = Sputnik(proggy, None)
+    var1 = 5
+    var2 = 55
+    sputnik.execute_program(a=var1, b=var2)
+    assert sputnik.program.state == (var1 ^ var2)
+
+
+def test_engine_XOR_combo():
+    SputnikParser = Parser('tests/xor-combo.sputnik')
+    proggy = SputnikParser.get_program()
+
+    sputnik = Sputnik(proggy, None)
+    var1 = 7
+    var2 = 17
+    sputnik.execute_program(a=var1, b=var2)
+    assert sputnik.program.state == ((var1 | var2) ^ (var1 & var2)) & (var1 ^ var2)
+
