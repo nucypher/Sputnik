@@ -24,6 +24,7 @@ class Sputnik:
         'MUX',
         'HALT',
         'EXIT',
+        'RECOVER',
     ]
 
     def __init__(self, program, bootstrapping_key):
