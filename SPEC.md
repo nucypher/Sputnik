@@ -54,6 +54,10 @@ PUSH plain STATE
 ```
 TODO
 
+### CONTROL
+
+**HALT** -- Kills program execution and dumps the runtime state.
+
 ### Comments
 
 Sputnik doesn't have inline comments, but you can write a comment via the semi-colon:
