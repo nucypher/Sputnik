@@ -1,31 +1,38 @@
+from binascii import hexlify
+from merkletools import MerkleTools
+
+
+OP_CODES = [
+    'BOOTSTRAP',
+    'PUSH',
+    'NAND',
+    'OR',
+    'AND',
+    'XOR',
+    'XNOR',
+    'NOT',
+    'COPY',
+    'CONST',
+    'NOR',
+    'ANDNY',
+    'ANDYN',
+    'ORNY',
+    'ORYN',
+    'MUX',
+    'HALT',
+    'EXIT',
+    'RECOVER',
+]
+
+
 class Sputnik:
     """
-    The Sputnik engine that controls the flow of a Sputnik program.
+    The Sputnik engine that controls the flow of a Sputnik program. This
+    engine is also responsible for the computation merkle-tree.
 
     TODO: Hash the variables and states throughout execution.
     """
 
-    OP_CODES = [
-        'BOOTSTRAP',
-        'PUSH',
-        'NAND',
-        'OR',
-        'AND',
-        'XOR',
-        'XNOR',
-        'NOT',
-        'COPY',
-        'CONST',
-        'NOR',
-        'ANDNY',
-        'ANDYN',
-        'ORNY',
-        'ORYN',
-        'MUX',
-        'HALT',
-        'EXIT',
-        'RECOVER',
-    ]
 
     def __init__(self, program, bootstrapping_key):
         """
@@ -34,6 +41,9 @@ class Sputnik:
         """
         self.program = program
         self.bootstrapping_key = bootstrapping_key
+
+        # Merkle-tree for verification
+        self.merkle = MerkleTools(hash_type='SHA256')
 
     def execute_program(self, exec_index=None, **kwargs):
         """
@@ -60,7 +70,7 @@ class Sputnik:
         Executes the given operation.
         """
         # Check if the OPCODE is in the list of OP_CODES
-        if not op_code in Sputnik.OP_CODES:
+        if not op_code in OP_CODES:
             raise SyntaxError("{} is not a valid OPCODE".format(op_code))
 
         # Get the OPCODE function
@@ -122,10 +132,12 @@ class Sputnik:
         IN: A, B
         """
         var1, var2 = args
+
         var1 = self.program.get_variable_data(var1)
         var2 = self.program.get_variable_data(var2)
 
-        self.program.set_variable_data('STATE', var1 ^ var2)
+        new_state = var1 ^ var2
+        self.program.set_variable_data('STATE', new_state)
 
     def XNOR(self, args, **kwargs):
         """
@@ -223,6 +235,17 @@ class Sputnik:
         # TODO: This would be neat to recover from a HALT, but it's gonna
         #       take a little refactoring.
         pass
+
+    def _merkleize_computation(self, *args):
+        """
+        Converts each arg into a bytestring, then makes each one a leaf on the
+        merkle tree.
+        """
+        # TODO: Hack for mocking -- Actually do this for real encrypted data
+        encoded_args = list()
+        for arg in args:
+            encoded_args.append(hexlify(arg.to_bytes(1, 'big')).decode())
+        self.merkle.add_leaf(encoded_args)
 
 
 class Program:
