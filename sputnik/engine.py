@@ -94,6 +94,104 @@ class Sputnik:
         from_var_data = self.program.get_variable_data(from_var)
         self.program.set_variable_data(to_var, from_var_data)
 
+    def NAND(self, args, **kwargs):
+        """
+        Performs a logical NAND on two bits.
+        IN: A, B
+        """
+        pass
+
+    def OR(self, args, **kwargs):
+        """
+        Performs a logical OR on two bits.
+        IN: A, B
+        """
+        pass
+
+    def AND(self, args, **kwargs):
+        """
+        Performs a logical AND on two bits.
+        IN: A, B
+        """
+        pass
+
+    def XOR(self, args, **kwargs):
+        """
+        Performs a logical XOR on two bits.
+        IN: A, B
+        """
+        pass
+
+    def XNOR(self, args, **kwargs):
+        """
+        Performs a logical XNOR on two bits.
+        IN: A, B
+        """
+        pass
+
+    def NOT(self, args, **kwargs):
+        """
+        Performs a logical NOT on one bit.
+        IN: A
+        """
+        pass
+
+    def COPY(self, args, **kwargs):
+        """
+        wtf is this?
+        IN: A
+        """
+        pass
+
+    def CONST(self, args, **kwargs):
+        """
+        wtf is this?
+        IN: A
+        """
+        pass
+
+    def NOR(self, args, **kwargs):
+        """
+        Performs a logical NOR on two bits.
+        IN: A, B
+        """
+        pass
+
+    def ANDNY(self, args, **kwargs):
+        """
+        Performs a logical AndNY on two bits (NOT(A) AND B)
+        IN: A, B
+        """
+        pass
+
+    def ANDYN(self, args, **kwargs):
+        """
+        Performs a logical AndYN on two bits (A and NOT(B))
+        IN: A, B
+        """
+        pass
+
+    def ORNY(self, args, **kwargs):
+        """
+        Performs a logical OrNY on two bits (NOT(A) OR B)
+        IN: A, B
+        """
+        pass
+
+    def ORYN(self, args, **kwargs):
+        """
+        Performs a logical OrYN on two bits (A OR NOT(B))
+        IN: A, B
+        """
+        pass
+
+    def MUX(self, args, **kwargs):
+        """
+        Performs a logical ternary multiplexer (A?B:C = A*B + NOT(A)*C)
+        IN: A, B, C
+        """
+        pass
+
     def HALT(self, args, **kwargs):
         """
         Kills program execution and dumps all program information. Mostly used
@@ -111,6 +209,15 @@ class Sputnik:
         # TODO: Probably need an error for empty state...
         self.program.is_killed = True
         return self.program.state
+
+    def RECOVER(self, args, **kwargs):
+        """
+        Recovers a program at any point by loading the entire program
+        state information.
+        """
+        # TODO: This would be neat to recover from a HALT, but it's gonna
+        #       take a little refactoring.
+        pass
 
 
 class Program:
