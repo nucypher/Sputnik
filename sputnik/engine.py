@@ -1,4 +1,4 @@
-#import nufhe
+import nufhe
 import numpy
 from binascii import hexlify
 from merkletools import MerkleTools
@@ -6,7 +6,7 @@ from reikna.cluda import any_api
 
 
 OP_CODES = [
-    'BOOTSTRAP',
+    'EXEC',
     'SIZE',
     'KEY',
     'PUSH',
@@ -49,8 +49,10 @@ class Sputnik:
         # Merkle-tree for verification
         self.merkle = MerkleTools(hash_type='SHA256')
 
+        # Setup NuFHE
         self.thr = any_api().Thread.create(interactive=True)
         self.rng = numpy.random.RandomState()
+        self.pp = nufhe.performance_parameters(single_kernel_bootstrap=False, transforms_per_block=1)
 
     def execute_program(self, exec_index=None, **kwargs):
         """
@@ -106,24 +108,25 @@ class Sputnik:
         """
         Sets the STATE size in bits.
         """
-        if hasattr(self.program, 'state_size'):
+        if self.program.size is not None:
             raise RuntimeError("Can't set SIZE more than once!")
 
         state_size = int(args[0])
-        self.program.state_size = state_size
+        self.program.size = state_size
 
     def KEY(self, args, **kwargs):
         """
-        Sets the bootstrapping key to use for encrypted computations.
+        Sets the bootstrapping key to use for encrypted computations and set
+        an empty encrypted STATE.
         """
-        if hasattr(self.program, 'bootstrap_key'):
+        if self.program.key is not None:
             raise RuntimeError("Can't set KEY more than once!")
 
         bootstrap_key = kwargs.get(args[0], None)
         if not bootstrap_key:
             raise SyntaxError("No key defined as {}".format(args[0]))
 
-        self.program.bootstrap_key = bootstrap_key
+        self.program.key = bootstrap_key
 
     def PUSH(self, args, **kwargs):
         """
@@ -138,7 +141,13 @@ class Sputnik:
         Performs a logical NAND on two bits.
         IN: A, B
         """
-        pass
+        left_name, right_name = args
+        left = self.program.get_variable_data(left_name)
+        right = self.program.get_variable_data(right_name)
+
+        result = nufhe.empty_ciphertext(self.thr, self.program.key.params, left.shape)
+        nufhe.gate_nand(self.thr, self.program.key, result, left, right, perf_params=self.pp)
+        self.program.set_variable_data('STATE', result)
 
     def OR(self, args, **kwargs):
         """
@@ -312,6 +321,8 @@ class Program:
         self.state = None
         self.variables = dict()
         self.exec_index = None
+        self.key = None
+        self.size = None
         self.is_halted = False
         self.is_killed = False
 
@@ -341,7 +352,7 @@ class Program:
         Finds and returns the index where the BOOTSTRAP call is performed.
         """
         for idx, operation in enumerate(self.operations):
-            if operation[0] == 'BOOTSTRAP':
+            if operation[0] == 'EXEC':
                 return idx
         raise SyntaxError("No entrance could be found -- needs a BOOTSTRAP")
 
@@ -385,6 +396,8 @@ class Program:
         state_info['state'] = self.state
         state_info['variables'] = self.variables.copy()
         state_info['exec_index'] = self.exec_index
+        state_info['size'] = self.size
+        state_info['key'] = self.key
         state_info['is_killed'] = self.is_killed
         state_info['is_halted'] = self.is_halted
         return state_info

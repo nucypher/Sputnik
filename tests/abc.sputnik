@@ -1,4 +1,4 @@
-BOOTSTRAP a b c
+EXEC a b c
 
 ; Compute XOR(a, XOR(b, c))
 XOR b c

@@ -1,4 +1,4 @@
-BOOTSTRAP a b
+EXEC a b
 
 ;OR computation
 OR a b
