@@ -22,8 +22,8 @@ def test_sputnik():
 
 
 def test_engine_halt():
-    SputnikParser = Parser('tests/engine_halt.sputnik')
+    SputnikParser = Parser('tests/abc.sputnik')
     proggy = SputnikParser.get_program()
 
     sputnik = Sputnik(proggy, None)
-    sputnik.execute_program(one=1, two=2, three=3)
+    output = sputnik.execute_program(a=1, b=2, c=3)

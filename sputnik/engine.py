@@ -125,7 +125,7 @@ class Sputnik:
         new_state = var1 | var2
         self.program.set_variable_data('STATE', new_state)
 
-        self.merkleize_computation(var1, var2, new_state)
+        self._merkleize_computation(var1, var2, new_state)
 
     def AND(self, args, **kwargs):
         """
@@ -140,7 +140,7 @@ class Sputnik:
         new_state = var1 & var2
         self.program.set_variable_data('STATE', new_state)
 
-        self.merkleize_computation(var1, var2, new_state)
+        self._merkleize_computation(var1, var2, new_state)
 
     def XOR(self, args, **kwargs):
         """
@@ -243,7 +243,10 @@ class Sputnik:
         """
         # TODO: Probably need an error for empty state...
         self.program.is_killed = True
-        return self.program.state
+
+        # Generate the merkle-tree
+        self.merkle.make_tree()
+        return self.program.state, self.merkle
 
     def RECOVER(self, args, **kwargs):
         """
