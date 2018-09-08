@@ -1,0 +1,12 @@
+BOOTSTRAP a b c
+
+; Compute XOR(a, XOR(b, c))
+XOR b c
+XOR STATE a
+
+; Compute AND(STATE, OR(b, c))
+PUSH STATE d
+OR b c
+AND STATE d
+
+EXIT
