@@ -68,7 +68,9 @@ class Sputnik:
         try:
             return op_code_func(args, **kwargs)
         except Exception:
-            raise RuntimeError("{} with args {}".format(op_code, args))
+            state_info = self.program.freeze()
+            raise RuntimeError("{} with args {} and state {}".format(
+                               op_code, args, state_info))
 
     def BOOTSTRAP(self, args, **kwargs):
         """
@@ -119,7 +121,11 @@ class Sputnik:
         Performs a logical XOR on two bits.
         IN: A, B
         """
-        pass
+        var1, var2 = args
+        var1 = self.program.get_variable_data(var1)
+        var2 = self.program.get_variable_data(var2)
+
+        self.program.set_variable_data('STATE', var1 ^ var2)
 
     def XNOR(self, args, **kwargs):
         """
@@ -244,12 +250,8 @@ class Program:
         """
         if var_name == 'STATE':
             return self.state
-        if var_name == 'NULL':
-            return None
 
         var = self.variables.get(var_name, None)
-        if not var:
-            raise SyntaxError("{} doesn't exist".format(var_name))
         return var
 
     def set_variable_data(self, var_name, var_data):

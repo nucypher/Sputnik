@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "146c83f647691d58f84eaf93e277059744bbb708fa92d00f3fe9f7e3dbe5540b"
+            "sha256": "1beca4091030fcad90983a2d8bb9158218571c89baeb7fc3db209f933a9ce4b6"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -38,6 +38,13 @@
             ],
             "index": "pypi",
             "version": "==6.7"
+        },
+        "merkletools": {
+            "hashes": [
+                "sha256:346dd10f3c11a8be5045cc3d9089f8d9315c9841deb5c71acfac031a7599b15d"
+            ],
+            "index": "pypi",
+            "version": "==1.0.3"
         },
         "more-itertools": {
             "hashes": [

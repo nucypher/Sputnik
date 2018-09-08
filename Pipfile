@@ -8,6 +8,7 @@ pytest = "*"
 "pysha3" = "*"
 click = "*"
 sputnik = {editable = true, path = "."}
+merkletools = "*"
 
 [dev-packages]
 
