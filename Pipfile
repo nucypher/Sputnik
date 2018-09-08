@@ -9,6 +9,8 @@ pytest = "*"
 click = "*"
 sputnik = {editable = true, path = "."}
 merkletools = "*"
+numpy = "*"
+reikna = "*"
 
 [dev-packages]
 
