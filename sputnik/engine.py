@@ -317,8 +317,8 @@ class Sputnik:
         self.program.is_killed = True
 
         # Generate the merkle-tree
-        self.merkle.make_tree()
-        return self.program.state, self.merkle
+        #self.merkle.make_tree()
+        return self.program.state#, aself.merkle
 
     def RECOVER(self, args, **kwargs):
         """
