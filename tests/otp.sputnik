@@ -1,0 +1,8 @@
+; Perform a one time pad homomorphically
+EXEC plain pad
+KEY test_key
+SIZE 32
+
+XOR plain pad
+
+EXIT
