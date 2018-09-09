@@ -17,16 +17,16 @@ The following is the format:
 
 All Sputnik programs begin with an entrance OPCODE and end with an exit OPCODE:
 ```
-BOOTSTRAP <inputs>
+EXEC <inputs>
 ...
 EXIT
 ```
-When `BOOTSTRAP` is called, the Sputnik execution engine expects the first unnamed
+When `EXEC` is called, the Sputnik execution engine expects the first unnamed
 parameter to be a bootstrapping key that the program can use to operate on ciphertext.
 
 The following inputs are entrance inputs to the Sputnik program:
 ```
-BOOTSTRAP plain pad
+EXEC plain pad
 ```
 In the above example, the variables `plain` and `pad` are encrypted inputs to
 the Sputnik program.
@@ -34,7 +34,7 @@ the Sputnik program.
 To declare the end of the Sputnik program and return the encrypted state, simply
 call `EXIT`:
 ```
-BOOTSTRAP plain pad
+EXEC plain pad
 ...
 EXIT
 ```
