@@ -1,5 +1,6 @@
 import nufhe
 import numpy
+import pickle
 from binascii import hexlify
 from merkletools import MerkleTools
 from reikna.cluda import any_api
@@ -99,7 +100,7 @@ class Sputnik:
         entrance_vars = dict()
         for var_name in args:
             var_data = kwargs.get(var_name, None)
-            if not var_data:
+            if var_data is None:
                 continue
             entrance_vars[var_name] = var_data
         self.program.set_entrance_vars(**entrance_vars)
@@ -187,6 +188,8 @@ class Sputnik:
         result = nufhe.empty_ciphertext(self.thr, self.program.key.params, left.shape)
         nufhe.gate_xor(self.thr, self.program.key, result, left, right, perf_params=self.pp)
         self.program.set_variable_data('STATE', result)
+
+        #self._merkleize_computation(pickle.dumps(left), pickle.dumps(right), pickle.dumps(result))
 
     def XNOR(self, args, **kwargs):
         """
@@ -317,8 +320,8 @@ class Sputnik:
         self.program.is_killed = True
 
         # Generate the merkle-tree
-        #self.merkle.make_tree()
-        return self.program.state#, aself.merkle
+        #tree = self.merkle.make_tree()
+        return self.program.state#, tree
 
     def RECOVER(self, args, **kwargs):
         """

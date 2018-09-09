@@ -2,7 +2,7 @@
 import nufhe
 import numpy
 import web3
-import web3.auto.gethdev
+from web3.auto.gethdev import w3
 from binascii import unhexlify
 from sputnik.engine import Sputnik
 from sputnik.parser import Parser
@@ -11,7 +11,7 @@ from vyper import compiler
 
 if __name__ == '__main__':
     #2
-    # Setup Sputnik and deploy contract
+    # Setup Sputnik and deploy vyper contract
     SputnikParser = Parser('contracts/otp.sputnik')
     proggy = SputnikParser.get_program()
     sputnik = Sputnik(proggy, None)
@@ -40,7 +40,7 @@ if __name__ == '__main__':
     size = 32
 
     #5
-    # Setup our plaintext and pad
+    # Setup our plaintext and pad, then encrypt them
     plain = numpy.array(
         [False, False, False, False, False, False, False, False,
          True, True, True, True, True, True, True, True,
@@ -49,16 +49,23 @@ if __name__ == '__main__':
     )
     pad = rng.randint(0, 2, size=size).astype(numpy.bool)
 
+    enc_plain = nufhe.encrypt(sputnik.thr, rng, secret_key, plain)
+    enc_pad = nufhe.encrypt(sputnik.thr, rng, secret_key, pad)
+
     #6
     # Execute the homomorphic contract
-    contract_state_out, merkle_tree = sputnik.execute_program(plain=plain, pad=pad, test_key=bootstrap_key)
+    contract_state_out = sputnik.execute_program(plain=enc_plain, pad=enc_pad, test_key=bootstrap_key)
+
+    #7 Show the reference vs the homomorphic contract output
+    reference = plain ^ pad
+    dec_fhe_ref = nufhe.decrypt(sputnik.thr, secret_key, contract_state_out)
+
 
     #7
-    # Commit the root to the blockchain and print it 
-    root = unhexlify(merkle_tree.get_merkle_root())
-    h1 = contract.functions.add(root).transact()
-    w3.eth.waitForTransactionReceipt(h1)
+    ## Commit the root to the blockchain and print it 
+    #root = unhexlify(merkle_tree.get_merkle_root())
+    #h1 = contract.functions.add(root).transact()
+    #w3.eth.waitForTransactionReceipt(h1)
 
-
-    # Verify that logic computation was done
-    contract_execution_root = contract.functions.read(0).call())
+    ## Verify that logic computation was done
+    #contract_execution_root = contract.functions.read(0).call()

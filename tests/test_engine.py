@@ -1,5 +1,6 @@
 import nufhe
 import numpy
+import pickle
 import pytest
 
 from reikna.cluda import any_api
