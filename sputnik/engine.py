@@ -154,59 +154,64 @@ class Sputnik:
         Performs a logical OR on two bits.
         IN: A, B
         """
-        var1, var2 = args
+        left_name, right_name = args
+        left = self.program.get_variable_data(left_name)
+        right = self.program.get_variable_data(right_name)
 
-        var1 = self.program.get_variable_data(var1)
-        var2 = self.program.get_variable_data(var2)
-
-        new_state = var1 | var2
-        self.program.set_variable_data('STATE', new_state)
-
-        self._merkleize_computation(var1, var2, new_state)
+        result = nufhe.empty_ciphertext(self.thr, self.program.key.params, left.shape)
+        nufhe.gate_or(self.thr, self.program.key, result, left, right, perf_params=self.pp)
+        self.program.set_variable_data('STATE', result)
 
     def AND(self, args, **kwargs):
         """
         Performs a logical AND on two bits.
         IN: A, B
         """
-        var1, var2 = args
+        left_name, right_name = args
+        left = self.program.get_variable_data(left_name)
+        right = self.program.get_variable_data(right_name)
 
-        var1 = self.program.get_variable_data(var1)
-        var2 = self.program.get_variable_data(var2)
-
-        new_state = var1 & var2
-        self.program.set_variable_data('STATE', new_state)
-
-        self._merkleize_computation(var1, var2, new_state)
+        result = nufhe.empty_ciphertext(self.thr, self.program.key.params, left.shape)
+        nufhe.gate_and(self.thr, self.program.key, result, left, right, perf_params=self.pp)
+        self.program.set_variable_data('STATE', result)
 
     def XOR(self, args, **kwargs):
         """
         Performs a logical XOR on two bits.
         IN: A, B
         """
-        var1, var2 = args
+        left_name, right_name = args
+        left = self.program.get_variable_data(left_name)
+        right = self.program.get_variable_data(right_name)
 
-        var1 = self.program.get_variable_data(var1)
-        var2 = self.program.get_variable_data(var2)
-
-        new_state = var1 ^ var2
-        self.program.set_variable_data('STATE', new_state)
-
-        self._merkleize_computation(var1, var2, new_state)
+        result = nufhe.empty_ciphertext(self.thr, self.program.key.params, left.shape)
+        nufhe.gate_xor(self.thr, self.program.key, result, left, right, perf_params=self.pp)
+        self.program.set_variable_data('STATE', result)
 
     def XNOR(self, args, **kwargs):
         """
         Performs a logical XNOR on two bits.
         IN: A, B
         """
-        pass
+        left_name, right_name = args
+        left = self.program.get_variable_data(left_name)
+        right = self.program.get_variable_data(right_name)
+
+        result = nufhe.empty_ciphertext(self.thr, self.program.key.params, left.shape)
+        nufhe.gate_xnor(self.thr, self.program.key, result, left, right, perf_params=self.pp)
+        self.program.set_variable_data('STATE', result)
 
     def NOT(self, args, **kwargs):
         """
         Performs a logical NOT on one bit.
         IN: A
         """
-        pass
+        left_name = args
+        left = self.program.get_variable_data(left_name)
+
+        result = nufhe.empty_ciphertext(self.thr, self.program.key.params, left.shape)
+        nufhe.gate_not(self.thr, self.program.key, result, left, perf_params=self.pp)
+        self.program.set_variable_data('STATE', result)
 
     def COPY(self, args, **kwargs):
         """
@@ -227,35 +232,65 @@ class Sputnik:
         Performs a logical NOR on two bits.
         IN: A, B
         """
-        pass
+        left_name, right_name = args
+        left = self.program.get_variable_data(left_name)
+        right = self.program.get_variable_data(right_name)
+
+        result = nufhe.empty_ciphertext(self.thr, self.program.key.params, left.shape)
+        nufhe.gate_nor(self.thr, self.program.key, result, left, right, perf_params=self.pp)
+        self.program.set_variable_data('STATE', result)
 
     def ANDNY(self, args, **kwargs):
         """
         Performs a logical AndNY on two bits (NOT(A) AND B)
         IN: A, B
         """
-        pass
+        left_name, right_name = args
+        left = self.program.get_variable_data(left_name)
+        right = self.program.get_variable_data(right_name)
+
+        result = nufhe.empty_ciphertext(self.thr, self.program.key.params, left.shape)
+        nufhe.gate_andny(self.thr, self.program.key, result, left, right, perf_params=self.pp)
+        self.program.set_variable_data('STATE', result)
 
     def ANDYN(self, args, **kwargs):
         """
         Performs a logical AndYN on two bits (A and NOT(B))
         IN: A, B
         """
-        pass
+        left_name, right_name = args
+        left = self.program.get_variable_data(left_name)
+        right = self.program.get_variable_data(right_name)
+
+        result = nufhe.empty_ciphertext(self.thr, self.program.key.params, left.shape)
+        nufhe.gate_andyn(self.thr, self.program.key, result, left, right, perf_params=self.pp)
+        self.program.set_variable_data('STATE', result)
 
     def ORNY(self, args, **kwargs):
         """
         Performs a logical OrNY on two bits (NOT(A) OR B)
         IN: A, B
         """
-        pass
+        left_name, right_name = args
+        left = self.program.get_variable_data(left_name)
+        right = self.program.get_variable_data(right_name)
+
+        result = nufhe.empty_ciphertext(self.thr, self.program.key.params, left.shape)
+        nufhe.gate_orny(self.thr, self.program.key, result, left, right, perf_params=self.pp)
+        self.program.set_variable_data('STATE', result)
 
     def ORYN(self, args, **kwargs):
         """
         Performs a logical OrYN on two bits (A OR NOT(B))
         IN: A, B
         """
-        pass
+        left_name, right_name = args
+        left = self.program.get_variable_data(left_name)
+        right = self.program.get_variable_data(right_name)
+
+        result = nufhe.empty_ciphertext(self.thr, self.program.key.params, left.shape)
+        nufhe.gate_oryn(self.thr, self.program.key, result, left, right, perf_params=self.pp)
+        self.program.set_variable_data('STATE', result)
 
     def MUX(self, args, **kwargs):
         """
