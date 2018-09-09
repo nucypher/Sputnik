@@ -130,11 +130,11 @@ class Sputnik:
 
     def PUSH(self, args, **kwargs):
         """
-        Pushes the from_var data to the to_var.
+        Pushes the left value to the right value
         """
-        from_var, to_var = args
-        from_var_data = self.program.get_variable_data(from_var)
-        self.program.set_variable_data(to_var, from_var_data)
+        left_name, right_name = args
+        left = self.program.get_variable_data(left_name)
+        self.program.set_variable_data(right_name, left)
 
     def NAND(self, args, **kwargs):
         """
