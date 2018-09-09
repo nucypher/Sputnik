@@ -2,6 +2,7 @@
 import nufhe
 import numpy
 import web3
+import pickle
 from web3.auto.gethdev import w3
 from binascii import unhexlify
 from sputnik.engine import Sputnik
@@ -54,18 +55,19 @@ if __name__ == '__main__':
 
     #6
     # Execute the homomorphic contract
-    contract_state_out = sputnik.execute_program(plain=enc_plain, pad=enc_pad, test_key=bootstrap_key)
+    contract_state_out, merkle_tree = sputnik.execute_program(plain=enc_plain, pad=enc_pad, test_key=bootstrap_key)
 
     #7 Show the reference vs the homomorphic contract output
     reference = plain ^ pad
     dec_fhe_ref = nufhe.decrypt(sputnik.thr, secret_key, contract_state_out)
 
-
-    #7
+    #8
     ## Commit the root to the blockchain and print it 
-    #root = unhexlify(merkle_tree.get_merkle_root())
-    #h1 = contract.functions.add(root).transact()
-    #w3.eth.waitForTransactionReceipt(h1)
+    root = merkle_tree.get_merkle_root()
+    h1 = contract.functions.add(root).transact()
+    w3.eth.waitForTransactionReceipt(h1)
+    print(root)
 
-    ## Verify that logic computation was done
-    #contract_execution_root = contract.functions.read(0).call()
+    #9
+    # Verify that logic computation was done by checking the blockchain
+    contract_execution_root = contract.functions.read(0).call()

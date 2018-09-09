@@ -189,7 +189,9 @@ class Sputnik:
         nufhe.gate_xor(self.thr, self.program.key, result, left, right, perf_params=self.pp)
         self.program.set_variable_data('STATE', result)
 
-        #self._merkleize_computation(pickle.dumps(left), pickle.dumps(right), pickle.dumps(result))
+        self._merkleize_computation(pickle.dumps((left.a.get(), left.b.get())),
+                                    pickle.dumps((right.a.get(), right.b.get())),
+                                    pickle.dumps((result.a.get(), result.b.get())))
 
     def XNOR(self, args, **kwargs):
         """
@@ -320,8 +322,8 @@ class Sputnik:
         self.program.is_killed = True
 
         # Generate the merkle-tree
-        #tree = self.merkle.make_tree()
-        return self.program.state#, tree
+        self.merkle.make_tree()
+        return self.program.state, self.merkle
 
     def RECOVER(self, args, **kwargs):
         """
@@ -337,10 +339,9 @@ class Sputnik:
         Converts each arg into a bytestring, then makes each one a leaf on the
         merkle tree.
         """
-        # TODO: Hack for mocking -- Actually do this for real encrypted data
         encoded_args = list()
         for arg in args:
-            encoded_args.append(hexlify(arg.to_bytes(1, 'big')).decode())
+            encoded_args.append(hexlify(arg).decode())
         self.merkle.add_leaf(encoded_args)
 
 
